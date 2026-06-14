@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - CrownLedger Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .settings-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .settings-nav {
+            display: flex;
+            gap: 0;
+            margin-bottom: 32px;
+            background: var(--white);
+            border-radius: var(--radius);
+            border: 1.5px solid var(--border-light);
+            overflow: hidden;
+        }
+        
+        .settings-nav-btn {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            font-family: inherit;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .settings-nav-btn.active {
+            color: var(--blue);
+            border-bottom-color: var(--blue);
+            background: var(--blue-light);
+        }
+        
+        .settings-panel {
+            display: none;
+        }
+        
+        .settings-panel.active {
+            display: block;
+        }
+        
+        .settings-section {
+            margin-bottom: 32px;
+        }
+        
+        .settings-section h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+        
+        .settings-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .settings-row:last-child {
+            border-bottom: none;
+        }
+        
+        .settings-label {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .settings-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            background: var(--border);
+            border-radius: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+        
+        .toggle-switch.active {
+            background: var(--blue);
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: var(--white);
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: var(--transition);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        
+        .toggle-switch.active::after {
+            left: 24px;
+        }
+        
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--blue);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 auto 16px;
+        }
+        
+        .security-method {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: var(--white);
+            border-radius: var(--radius);
+            border: 1.5px solid var(--border-light);
+            margin-bottom: 12px;
+        }
+        
+        .security-method i {
+            font-size: 24px;
+            color: var(--blue);
+            width: 40px;
+            text-align: center;
+        }
+        
+        .security-method-info {
+            flex: 1;
+        }
+        
+        .security-method-info h4 {
+            font-weight: 600;
+            font-size: 15px;
+        }
+        
+        .security-method-info p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .badge-success {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+        
+        .badge-warning {
+            background: #fef3c7;
+            color: #d97706;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <nav class="top-nav">
+            <div class="nav-left" style="display:flex;align-items:center;width:100%;max-width:1200px;margin:0 auto;padding:0 24px;">
+                <div class="logo-small">CrownLedger<span class="logo-trademark">®</span></div>
+                <div class="nav-links">
+                    <a href="dashboard.html">Accounts</a>
+                    <a href="transfer.html">Pay & Transfer</a>
+                    <a href="transactions.html">Activity</a>
+                    <a href="settings.html" class="active">Settings</a>
+                </div>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div style="margin-left:auto;display:flex;align-items:center;gap:16px;">
+                    <span class="welcome-text">Welcome, <span id="userName">Kimberly</span></span>
+                    <button class="btn-outline-small" onclick="handleLogout()">Sign Out</button>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="dashboard.html">Accounts</a>
+            <a href="transfer.html">Pay & Transfer</a>
+            <a href="transactions.html">Activity</a>
+            <a href="settings.html">Settings</a>
+            <a href="#" onclick="handleLogout()">Sign Out</a>
+        </div>
+
+        <main class="main-content">
+            <div class="page-header" style="text-align:center;">
+                <h1>Settings</h1>
+                <p class="subtitle">Manage your account preferences and security</p>
+            </div>
+
+            <div class="settings-container">
+                <div class="settings-nav">
+                    <button class="settings-nav-btn active" onclick="switchSettings('profile')">Profile</button>
+                    <button class="settings-nav-btn" onclick="switchSettings('security')">Security</button>
+                    <button class="settings-nav-btn" onclick="switchSettings('notifications')">Notifications</button>
+                </div>
+
+                <!-- Profile Panel -->
+                <div class="settings-panel active" id="profilePanel">
+                    <div class="card" style="text-align:center;padding:32px;">
+                        <div class="profile-avatar" id="profileAvatar">KW</div>
+                        <h2 id="profileFullName">Kimberly Westbrook</h2>
+                        <p style="color:var(--text-muted);margin-top:4px;" id="profileEmail">kimberly.westbrook@email.com</p>
+                        <p style="color:var(--text-muted);font-size:13px;">Member since March 2024</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="settings-section">
+                            <h3>Personal Information</h3>
+                            <form onsubmit="return updateProfile(event)">
+                                <div class="form-group">
+                                    <label>First Name</label>
+                                    <input type="text" id="editFirstName" class="form-input" value="Kimberly">
+                                </div>
+                                <div class="form-group">
+                                    <label>Last Name</label>
+                                    <input type="text" id="editLastName" class="form-input" value="Westbrook">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email Address</label>
+                                    <input type="email" id="editEmail" class="form-input" value="kimberly.westbrook@email.com">
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone Number</label>
+                                    <input type="tel" id="editPhone" class="form-input" value="(555) 123-4567">
+                                </div>
+                                <div class="form-group">
+                                    <label>Address</label>
+                                    <input type="text" id="editAddress" class="form-input" value="123 Main Street, Apt 4B">
+                                </div>
+                                <div class="form-group">
+                                    <label>City, State ZIP</label>
+                                    <input type="text" id="editCityState" class="form-input" value="New York, NY 10001">
+                                </div>
+                                <button type="submit" class="btn-primary">
+                                    <i class="fas fa-save"></i> Save Changes
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Panel -->
+                <div class="settings-panel" id="securityPanel">
+                    <div class="card">
+                        <div class="settings-section">
+                            <h3>Login & Authentication</h3>
+                            <div class="security-method">
+                                <i class="fas fa-lock"></i>
+                                <div class="security-method-info">
+                                    <h4>Password</h4>
+                                    <p>Last changed 45 days ago</p>
+                                </div>
+                                <button class="btn-outline-small" onclick="showMessage('Password change feature coming soon')">Change</button>
+                            </div>
+                            <div class="security-method">
+                                <i class="fas fa-fingerprint"></i>
+                                <div class="security-method-info">
+                                    <h4>Biometric Login</h4>
+                                    <p>Use Face ID or Touch ID</p>
+                                </div>
+                                <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="settings-section">
+                            <h3>Two-Factor Authentication</h3>
+                            <div class="security-method">
+                                <i class="fas fa-mobile-alt"></i>
+                                <div class="security-method-info">
+                                    <h4>SMS Authentication</h4>
+                                    <p>Receive codes via text message</p>
+                                </div>
+                                <span class="badge badge-success">Enabled</span>
+                            </div>
+                            <div class="security-method">
+                                <i class="fas fa-shield-alt"></i>
+                                <div class="security-method-info">
+                                    <h4>Authenticator App</h4>
+                                    <p>Use Google Authenticator or similar</p>
+                                </div>
+                                <span class="badge badge-warning">Not Set Up</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="settings-section">
+                            <h3>Account Security</h3>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">Login Alerts</div>
+                                    <div class="settings-desc">Get notified of new sign-ins</div>
+                                </div>
+                                <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                            </div>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">Transaction Alerts</div>
+                                    <div class="settings-desc">Get notified of all transactions</div>
+                                </div>
+                                <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Panel -->
+                <div class="settings-panel" id="notificationsPanel">
+                    <div class="card">
+                        <div class="settings-section">
+                            <h3>Notification Preferences</h3>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">Email Notifications</div>
+                                    <div class="settings-desc">Receive updates via email</div>
+                                </div>
+                                <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                            </div>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">Push Notifications</div>
+                                    <div class="settings-desc">Receive updates on your device</div>
+                                </div>
+                                <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                            </div>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">SMS Notifications</div>
+                                    <div class="settings-desc">Receive updates via text message</div>
+                                </div>
+                                <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                            </div>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">Marketing Emails</div>
+                                    <div class="settings-desc">Receive offers and promotions</div>
+                                </div>
+                                <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="settings-section">
+                            <h3>Alert Types</h3>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">Large Transactions</div>
+                                    <div class="settings-desc">Over $1,000</div>
+                                </div>
+                                <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                            </div>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">Low Balance</div>
+                                    <div class="settings-desc">Below $500</div>
+                                </div>
+                                <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                            </div>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">Bill Due Reminders</div>
+                                    <div class="settings-desc">3 days before due date</div>
+                                </div>
+                                <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>© 2026 CrownLedger Bank, N.A. Member FDIC. Equal Housing Lender</p>
+                <div class="footer-links">
+                    <a href="#">Privacy</a>
+                    <a href="#">Security</a>
+                    <a href="#">Terms of Use</a>
+                    <a href="#">Accessibility</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="messageModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <p id="modalMessage"></p>
+            <button onclick="closeModal()" class="btn-primary">OK</button>
+        </div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+        }
+        
+        function showMessage(msg) {
+            document.getElementById('modalMessage').textContent = msg;
+            document.getElementById('messageModal').style.display = 'flex';
+        }
+        
+        function closeModal() {
+            document.getElementById('messageModal').style.display = 'none';
+        }
+        
+        function switchSettings(panel) {
+            document.querySelectorAll('.settings-nav-btn').forEach(function(el) {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.settings-panel').forEach(function(el) {
+                el.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            document.getElementById(panel + 'Panel').classList.add('active');
+        }
+        
+        function toggleSwitch(el) {
+            el.classList.toggle('active');
+        }
+        
+        function updateProfile(e) {
+            e.preventDefault();
+            var firstName = document.getElementById('editFirstName').value;
+            var lastName = document.getElementById('editLastName').value;
+            var email = document.getElementById('editEmail').value;
+            var phone = document.getElementById('editPhone').value;
+            var address = document.getElementById('editAddress').value;
+            var cityState = document.getElementById('editCityState').value;
+            
+            var state = JSON.parse(localStorage.getItem('crownledger_state') || '{}');
+            state.firstName = firstName;
+            state.lastName = lastName;
+            state.email = email;
+            state.phone = phone;
+            state.address = address;
+            state.cityState = cityState;
+            localStorage.setItem('crownledger_state', JSON.stringify(state));
+            
+            document.getElementById('profileFullName').textContent = firstName + ' ' + lastName;
+            document.getElementById('profileEmail').textContent = email;
+            document.getElementById('profileAvatar').textContent = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+            document.getElementById('userName').textContent = firstName;
+            
+            showMessage('Profile updated successfully.');
+            return false;
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            var state = JSON.parse(localStorage.getItem('crownledger_state') || '{}');
+            if (state.firstName) {
+                document.getElementById('userName').textContent = state.firstName;
+                document.getElementById('editFirstName').value = state.firstName;
+                document.getElementById('profileFullName').textContent = (state.firstName || 'Kimberly') + ' ' + (state.lastName || 'Westbrook');
+                document.getElementById('profileAvatar').textContent = ((state.firstName || 'K').charAt(0) + (state.lastName || 'W').charAt(0)).toUpperCase();
+            }
+            if (state.lastName) {
+                document.getElementById('editLastName').value = state.lastName;
+            }
+            if (state.email) {
+                document.getElementById('editEmail').value = state.email;
+                document.getElementById('profileEmail').textContent = state.email;
+            }
+            if (state.phone) document.getElementById('editPhone').value = state.phone;
+            if (state.address) document.getElementById('editAddress').value = state.address;
+            if (state.cityState) document.getElementById('editCityState').value = state.cityState;
+        });
+    </script>
+</body>
+</html>
