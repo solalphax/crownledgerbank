@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Activation - CrownLedger Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <nav class="top-nav">
+            <div class="nav-left">
+                <div class="logo-small">CrownLedger<span class="logo-trademark">®</span></div>
+                <div class="nav-links">
+                    <a href="dashboard.html">Accounts</a>
+                    <a href="transfer.html" class="active">Pay & Transfer</a>
+                    <a href="transactions.html">Activity</a>
+                    <a href="settings.html">Settings</a>
+                </div>
+            </div>
+            <div class="nav-right">
+                <span class="welcome-text">Welcome, <span id="userName">Kimberly</span></span>
+                <button class="btn-outline-small" onclick="handleLogout()">Sign Out</button>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="activation-container">
+                <div class="activation-card">
+                    <div class="activation-header">
+                        <div class="activation-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h1>Account Activation Required</h1>
+                        <p class="activation-subtitle">Complete activation to unlock sending and withdrawal features</p>
+                    </div>
+
+                    <div class="activation-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Account Holder</span>
+                            <span class="detail-value">Kimberly Westbrook</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Account Number</span>
+                            <span class="detail-value">...8291</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Activation Fee</span>
+                            <span class="detail-value fee-amount">$500.00</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Status</span>
+                            <span class="detail-value status-pending">Pending Activation</span>
+                        </div>
+                    </div>
+
+                    <div class="activation-info">
+                        <h3><i class="fas fa-info-circle"></i> Why is this required?</h3>
+                        <p>To ensure the security of your account and comply with federal banking regulations, CrownLedger Bank requires a one-time account activation fee before enabling external transfer capabilities. This fee helps us verify your identity and protect against fraudulent activity.</p>
+                        
+                        <h3><i class="fas fa-lock"></i> What you'll get</h3>
+                        <ul>
+                            <li>Unlimited domestic and international transfers</li>
+                            <li>Instant peer-to-peer payments</li>
+                            <li>Wire transfer capabilities</li>
+                            <li>Enhanced fraud protection</li>
+                            <li>Priority customer support</li>
+                        </ul>
+                    </div>
+
+                    <div class="activation-actions">
+                        <button class="btn-primary btn-large" onclick="window.location.href='payment-options.html'">
+                            <i class="fas fa-credit-card"></i> Pay Activation Fee - $500.00
+                        </button>
+                        <button class="btn-text" onclick="window.location.href='dashboard.html'">Return to Dashboard</button>
+                    </div>
+
+                    <div class="activation-disclaimer">
+                        <p><i class="fas fa-shield-alt"></i> Your payment is secured with 256-bit encryption. This is a one-time fee and will not recur.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>© 2026 CrownLedger Bank, N.A. Member FDIC. Equal Housing Lender</p>
+                <div class="footer-links">
+                    <a href="#">Privacy</a>
+                    <a href="#">Security</a>
+                    <a href="#">Terms of Use</a>
+                    <a href="#">Accessibility</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>initPage();</script>
+</body>
+</html>
