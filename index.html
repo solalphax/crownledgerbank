@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a2540">
+    <title>Sign In - CrownLedger Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --navy: #0a2540;
+            --navy-light: #0f3560;
+            --blue: #0066b2;
+            --blue-hover: #005a9e;
+            --gold: #c9a227;
+            --bg: #f4f6f8;
+            --white: #ffffff;
+            --text: #1a1a1a;
+            --text-secondary: #5a5a5a;
+            --border: #d1d5db;
+            --error: #d13438;
+            --success: #107c10;
+            --shadow: 0 4px 24px rgba(0,0,0,0.08);
+            --shadow-lg: 0 12px 48px rgba(0,0,0,0.12);
+        }
+
+        body.login-body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+        .login-header {
+            background: var(--navy);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+        }
+
+        .login-header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--white);
+            letter-spacing: -0.5px;
+        }
+
+        .logo-trademark {
+            font-size: 12px;
+            vertical-align: super;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        .login-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .login-links a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .login-links a:hover {
+            color: var(--white);
+        }
+
+        .btn-small {
+            background: transparent;
+            border: 1.5px solid rgba(255,255,255,0.4);
+            color: var(--white);
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-small:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--white);
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 22px;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        /* Main Container */
+        .login-container {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 48px 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: start;
+            width: 100%;
+        }
+
+        /* Login Card */
+        .login-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 48px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .login-card h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            font-size: 16px;
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: var(--white);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 0 4px rgba(0,102,178,0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #9ca3af;
+        }
+
+        .form-group input.error {
+            border-color: var(--error);
+            background: #fef2f2;
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .error-message.show {
+            display: flex;
+        }
+
+        /* Options */
+        .form-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--blue);
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            color: var(--blue);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .forgot-link:hover {
+            color: var(--blue-hover);
+            text-decoration: underline;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: var(--blue);
+            color: var(--white);
+            border: none;
+            padding: 16px 24px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            font-family: inherit;
+        }
+
+        .btn-primary:hover {
+            background: var(--blue-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0,102,178,0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--navy);
+            border: 2px solid var(--border);
+            padding: 16px 24px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            font-family: inherit;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--blue);
+            color: var(--blue);
+            background: rgba(0,102,178,0.04);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* Divider */
+        .login-divider {
+            display: flex;
+            align-items: center;
+            margin: 28px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .login-divider::before,
+        .login-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .login-divider span {
+            padding: 0 16px;
+        }
+
+        /* Footer Links */
+        .login-footer-links {
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .login-footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.2s;
+        }
+
+        .login-footer-links a:hover {
+            color: var(--blue);
+        }
+
+        .separator {
+            color: var(--border);
+        }
+
+        /* Info Section */
+        .login-info {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            padding-top: 16px;
+        }
+
+        .info-box {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .info-box:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .info-box h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 12px;
+        }
+
+        .info-box p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .link-arrow {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: gap 0.2s;
+        }
+
+        .link-arrow:hover {
+            gap: 12px;
+            text-decoration: underline;
+        }
+
+        /* Security Badge */
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(16,124,16,0.08);
+            border: 1px solid rgba(16,124,16,0.15);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+        }
+
+        .security-badge i {
+            color: var(--success);
+            font-size: 20px;
+        }
+
+        .security-badge span {
+            font-size: 14px;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .login-footer {
+            background: var(--navy);
+            color: rgba(255,255,255,0.7);
+            padding: 32px 24px;
+            margin-top: auto;
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer-inner p {
+            font-size: 13px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--white);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            animation: modalSlide 0.3s ease;
+        }
+
+        @keyframes modalSlide {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-box i {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .modal-box i.fa-check-circle {
+            color: var(--success);
+        }
+
+        .modal-box i.fa-exclamation-circle {
+            color: var(--error);
+        }
+
+        .modal-box h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--navy);
+        }
+
+        .modal-box p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            font-size: 15px;
+        }
+
+        .modal-box .btn-primary {
+            width: auto;
+            padding: 12px 32px;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        .spinner.show {
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            background: var(--navy-light);
+            padding: 16px 24px;
+        }
+
+        .mobile-menu a {
+            display: block;
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            padding: 12px 0;
+            font-size: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .mobile-menu a:last-child {
+            border-bottom: none;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .login-container {
+                grid-template-columns: 1fr;
+                gap: 32px;
+                padding: 32px 20px;
+            }
+
+            .login-info {
+                order: -1;
+                padding-top: 0;
+            }
+
+            .info-box {
+                padding: 24px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .login-header-inner {
+                padding: 0 16px;
+                height: 56px;
+            }
+
+            .login-links {
+                display: none;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .login-card {
+                padding: 28px 24px;
+                border-radius: 12px;
+            }
+
+            .login-card h1 {
+                font-size: 26px;
+            }
+
+            .login-container {
+                padding: 24px 16px;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .login-card {
+                padding: 24px 20px;
+            }
+
+            .form-options {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body class="login-body">
+    <header class="login-header">
+        <div class="login-header-inner">
+            <div class="logo">CrownLedger<span class="logo-trademark">®</span></div>
+            <nav class="login-links">
+                <a href="#">ATM & Branch Locator</a>
+                <a href="#">Support</a>
+                <a href="#">Español</a>
+                <a href="#" class="btn-small">Open an Account</a>
+            </nav>
+            <button class="mobile-toggle" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#">ATM & Branch Locator</a>
+            <a href="#">Support</a>
+            <a href="#">Español</a>
+            <a href="#">Open an Account</a>
+        </div>
+    </header>
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="security-badge">
+                <i class="fas fa-shield-alt"></i>
+                <span>Secure, encrypted connection</span>
+            </div>
+
+            <h1>Welcome back</h1>
+            <p class="login-subtitle">Sign in to access your CrownLedger Bank accounts securely.</p>
+            
+            <form id="loginForm" onsubmit="return handleLogin(event)">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" autocomplete="username" placeholder="Enter username" required>
+                    <div class="error-message" id="usernameError">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>Please enter your username</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" autocomplete="current-password" placeholder="Enter password" required>
+                    <div class="error-message" id="passwordError">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>Please enter your password</span>
+                    </div>
+                </div>
+                
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="remember">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-link" onclick="showMessage('Password reset coming soon')">Forgot username/password?</a>
+                </div>
+                
+                <button type="submit" class="btn-primary btn-full" id="loginBtn">
+                    <span class="btn-text">Sign In</span>
+                    <div class="spinner" id="loginSpinner"></div>
+                </button>
+                
+                <div class="login-divider">
+                    <span>or</span>
+                </div>
+                
+                <button type="button" class="btn-secondary btn-full" onclick="showMessage('Enrollment coming soon')">
+                    <i class="fas fa-user-plus"></i> Enroll in Online Banking
+                </button>
+            </form>
+            
+            <div class="login-footer-links">
+                <a href="#">Privacy</a>
+                <span class="separator">|</span>
+                <a href="#">Security</a>
+                <span class="separator">|</span>
+                <a href="#">Terms of Use</a>
+            </div>
+        </div>
+        
+        <div class="login-info">
+            <div class="info-box">
+                <h3><i class="fas fa-star" style="color: var(--gold); margin-right: 8px;"></i>First time here?</h3>
+                <p>Enroll in online banking to manage your accounts, pay bills, transfer money, and monitor your finances securely — anytime, anywhere.</p>
+                <a href="#" class="link-arrow" onclick="showMessage('Enrollment coming soon')">Get started →</a>
+            </div>
+            <div class="info-box">
+                <h3><i class="fas fa-mobile-alt" style="color: var(--blue); margin-right: 8px;"></i>Mobile Banking</h3>
+                <p>Download the CrownLedger Bank mobile app for 24/7 access to your accounts, mobile check deposit, and instant alerts.</p>
+                <a href="#" class="link-arrow" onclick="showMessage('App store coming soon')">Learn more →</a>
+            </div>
+            <div class="info-box">
+                <h3><i class="fas fa-headset" style="color: var(--success); margin-right: 8px;"></i>Need Help?</h3>
+                <p>Our customer service team is available 24/7 to assist you with any questions or concerns about your account.</p>
+                <a href="help.html" class="link-arrow">Contact Support →</a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="login-footer">
+        <div class="footer-inner">
+            <p>© 2026 CrownLedger Bank, N.A. Member FDIC. Equal Housing Lender</p>
+            <div class="footer-links">
+                <a href="#">Privacy</a>
+                <a href="#">Security</a>
+                <a href="#">Terms of Use</a>
+                <a href="#">Accessibility</a>
+                <a href="#">About Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Message Modal -->
+    <div class="modal-overlay" id="messageModal">
+        <div class="modal-box">
+            <i class="fas fa-exclamation-circle" id="modalIcon"></i>
+            <h3 id="modalTitle">Notice</h3>
+            <p id="modalMessage">Message goes here</p>
+            <button onclick="closeModal()" class="btn-primary">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+        }
+
+        // Show modal message
+        function showMessage(message, type) {
+            const modal = document.getElementById('messageModal');
+            const modalIcon = document.getElementById('modalIcon');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            
+            modalMessage.textContent = message;
+            
+            if (type === 'success') {
+                modalIcon.className = 'fas fa-check-circle';
+                modalTitle.textContent = 'Success';
+            } else {
+                modalIcon.className = 'fas fa-exclamation-circle';
+                modalTitle.textContent = 'Notice';
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('messageModal').classList.remove('active');
+        }
+
+        // Close modal on overlay click
+        document.getElementById('messageModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Handle login
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const usernameError = document.getElementById('usernameError');
+            const passwordError = document.getElementById('passwordError');
+            const loginBtn = document.getElementById('loginBtn');
+            const spinner = document.getElementById('loginSpinner');
+            const btnText = loginBtn.querySelector('.btn-text');
+            
+            // Reset errors
+            usernameInput.classList.remove('error');
+            passwordInput.classList.remove('error');
+            usernameError.classList.remove('show');
+            passwordError.classList.remove('show');
+            
+            // Validate
+            let hasError = false;
+            
+            if (!username) {
+                usernameInput.classList.add('error');
+                usernameError.classList.add('show');
+                hasError = true;
+            }
+            
+            if (!password) {
+                passwordInput.classList.remove('error');
+                passwordError.classList.add('show');
+                hasError = true;
+            }
+            
+            if (hasError) return false;
+            
+            // Show loading
+            loginBtn.disabled = true;
+            btnText.textContent = 'Signing in...';
+            spinner.classList.add('show');
+            
+            // Simulate API call
+            setTimeout(function() {
+                // Check credentials
+                if (username === 'Kimberlywestbrooklmi' && password === 'WestKim19$') {
+                    // Success - save session
+                    localStorage.setItem('crownledger_session', JSON.stringify({
+                        username: username,
+                        name: 'Kimberly Westbrook',
+                        firstName: 'Kimberly',
+                        loginTime: new Date().toISOString(),
+                        checking: 11700.00,
+                        savings: 2520.00
+                    }));
+                    
+                    btnText.textContent = 'Success!';
+                    spinner.classList.remove('show');
+                    
+                    // Redirect to dashboard
+                    setTimeout(function() {
+                        window.location.href = 'dashboard.html';
+                    }, 500);
+                    
+                } else {
+                    // Failed
+                    loginBtn.disabled = false;
+                    btnText.textContent = 'Sign In';
+                    spinner.classList.remove('show');
+                    
+                    usernameInput.classList.add('error');
+                    passwordInput.classList.add('error');
+                    
+                    showMessage('The username or password you entered is incorrect. Please try again.', 'error');
+                }
+            }, 1500);
+            
+            return false;
+        }
+
+        // Check if already logged in
+        (function() {
+            const session = localStorage.getItem('crownledger_session');
+            if (session) {
+                try {
+                    const data = JSON.parse(session);
+                    const hoursSinceLogin = (new Date() - new Date(data.loginTime)) / (1000 * 60 * 60);
+                    if (hoursSinceLogin < 24) {
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        localStorage.removeItem('crownledger_session');
+                    }
+                } catch(e) {
+                    localStorage.removeItem('crownledger_session');
+                }
+            }
+        })();
+
+        // Enter key support
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleLogin(e);
+            }
+        });
+    </script>
+</body>
+</html>
