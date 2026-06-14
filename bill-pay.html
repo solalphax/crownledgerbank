@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Pay - CrownLedger Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .bill-pay-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .payee-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .payee-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: var(--white);
+            border-radius: var(--radius);
+            border: 1.5px solid var(--border-light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .payee-item:hover {
+            border-color: var(--blue);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .payee-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .payee-icon.blue { background: var(--blue-light); color: var(--blue); }
+        .payee-icon.red { background: var(--error-bg); color: var(--error); }
+        .payee-icon.green { background: var(--success-bg); color: var(--success); }
+        .payee-icon.gold { background: var(--gold-light); color: var(--gold); }
+        .payee-icon.purple { background: #f3e8ff; color: #7c3aed; }
+        
+        .payee-info {
+            flex: 1;
+        }
+        
+        .payee-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+        
+        .payee-account {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        
+        .payee-amount {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+        }
+        
+        .add-payee-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            color: var(--blue);
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            background: none;
+            width: 100%;
+            font-family: inherit;
+        }
+        
+        .add-payee-btn:hover {
+            border-color: var(--blue);
+            background: var(--blue-light);
+        }
+        
+        .schedule-options {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .schedule-option {
+            padding: 10px 20px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--white);
+            font-family: inherit;
+        }
+        
+        .schedule-option:hover,
+        .schedule-option.active {
+            border-color: var(--blue);
+            background: var(--blue-light);
+            color: var(--blue);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <nav class="top-nav">
+            <div class="nav-left" style="display:flex;align-items:center;width:100%;max-width:1200px;margin:0 auto;padding:0 24px;">
+                <div class="logo-small">CrownLedger<span class="logo-trademark">®</span></div>
+                <div class="nav-links">
+                    <a href="dashboard.html">Accounts</a>
+                    <a href="transfer.html">Pay & Transfer</a>
+                    <a href="transactions.html">Activity</a>
+                    <a href="settings.html">Settings</a>
+                </div>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div style="margin-left:auto;display:flex;align-items:center;gap:16px;">
+                    <span class="welcome-text">Welcome, <span id="userName">Kimberly</span></span>
+                    <button class="btn-outline-small" onclick="handleLogout()">Sign Out</button>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="dashboard.html">Accounts</a>
+            <a href="transfer.html">Pay & Transfer</a>
+            <a href="transactions.html">Activity</a>
+            <a href="settings.html">Settings</a>
+            <a href="#" onclick="handleLogout()">Sign Out</a>
+        </div>
+
+        <main class="main-content">
+            <div class="page-header" style="text-align:center;">
+                <h1>Bill Pay</h1>
+                <p class="subtitle">Pay your bills quickly and securely</p>
+            </div>
+
+            <div class="bill-pay-container">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Your Payees</h2>
+                        <span style="font-size:14px;color:var(--text-secondary);">3 active</span>
+                    </div>
+                    
+                    <div class="payee-list">
+                        <div class="payee-item" onclick="selectPayee('Liberty Mutual')">
+                            <div class="payee-icon blue"><i class="fas fa-shield-alt"></i></div>
+                            <div class="payee-info">
+                                <div class="payee-name">Liberty Mutual Insurance</div>
+                                <div class="payee-account">Account ending in 7721</div>
+                            </div>
+                            <div class="payee-amount">Auto-pay On</div>
+                        </div>
+                        
+                        <div class="payee-item" onclick="selectPayee('Verizon')">
+                            <div class="payee-icon red"><i class="fas fa-mobile-alt"></i></div>
+                            <div class="payee-info">
+                                <div class="payee-name">Verizon Wireless</div>
+                                <div class="payee-account">Account ending in 3342</div>
+                            </div>
+                            <div class="payee-amount">$89.00/mo</div>
+                        </div>
+                        
+                        <div class="payee-item" onclick="selectPayee('Comcast')">
+                            <div class="payee-icon purple"><i class="fas fa-wifi"></i></div>
+                            <div class="payee-info">
+                                <div class="payee-name">Comcast Xfinity</div>
+                                <div class="payee-account">Account ending in 5567</div>
+                            </div>
+                            <div class="payee-amount">$124.00/mo</div>
+                        </div>
+                    </div>
+                    
+                    <button class="add-payee-btn" onclick="showMessage('Add payee feature coming soon')">
+                        <i class="fas fa-plus"></i> Add New Payee
+                    </button>
+                </div>
+
+                <div class="card" id="paymentForm" style="display:none;">
+                    <h2 style="margin-bottom:24px;">Make a Payment</h2>
+                    <form onsubmit="return handleBillPay(event)">
+                        <div class="form-group">
+                            <label>Payee</label>
+                            <input type="text" id="payeeName" class="form-input" readonly>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>From Account</label>
+                            <select class="form-input" id="fromAccount">
+                                <option value="checking">CrownLedger Checking ($11,700.00)</option>
+                                <option value="savings">CrownLedger Savings ($2,520.00)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <div class="amount-input-wrapper">
+                                <span class="currency-symbol">$</span>
+                                <input type="number" id="billAmount" class="amount-input" placeholder="0.00" step="0.01" min="0.01" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Schedule</label>
+                            <div class="schedule-options">
+                                <button type="button" class="schedule-option active" onclick="setSchedule(this, 'now')">Pay Now</button>
+                                <button type="button" class="schedule-option" onclick="setSchedule(this, 'later')">Pay Later</button>
+                                <button type="button" class="schedule-option" onclick="setSchedule(this, 'recurring')">Recurring</button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="billMemo">Memo (Optional)</label>
+                            <input type="text" id="billMemo" class="form-input" placeholder="Note for this payment">
+                        </div>
+                        
+                        <button type="submit" class="btn-primary btn-full">
+                            <i class="fas fa-paper-plane"></i> Submit Payment
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>© 2026 CrownLedger Bank, N.A. Member FDIC. Equal Housing Lender</p>
+                <div class="footer-links">
+                    <a href="#">Privacy</a>
+                    <a href="#">Security</a>
+                    <a href="#">Terms of Use</a>
+                    <a href="#">Accessibility</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="messageModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <p id="modalMessage"></p>
+            <button onclick="closeModal()" class="btn-primary">OK</button>
+        </div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+        }
+        
+        function showMessage(msg) {
+            document.getElementById('modalMessage').textContent = msg;
+            document.getElementById('messageModal').style.display = 'flex';
+        }
+        
+        function closeModal() {
+            document.getElementById('messageModal').style.display = 'none';
+        }
+        
+        function selectPayee(name) {
+            document.getElementById('payeeName').value = name;
+            document.getElementById('paymentForm').style.display = 'block';
+            document.getElementById('paymentForm').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function setSchedule(btn, type) {
+            document.querySelectorAll('.schedule-option').forEach(function(el) {
+                el.classList.remove('active');
+            });
+            btn.classList.add('active');
+        }
+        
+        function handleBillPay(e) {
+            e.preventDefault();
+            var payee = document.getElementById('payeeName').value;
+            var amount = parseFloat(document.getElementById('billAmount').value);
+            var memo = document.getElementById('billMemo').value;
+            
+            if (!amount || amount <= 0) {
+                showMessage('Please enter a valid amount.');
+                return false;
+            }
+            
+            var state = JSON.parse(localStorage.getItem('crownledger_state') || '{}');
+            var checking = state.checking || 11700;
+            
+            if (amount > checking) {
+                showMessage('Insufficient funds in your checking account.');
+                return false;
+            }
+            
+            state.checking = (checking - amount).toFixed(2);
+            localStorage.setItem('crownledger_state', JSON.stringify(state));
+            
+            var tx = {
+                id: 'BP' + Date.now(),
+                date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                description: 'Bill Pay - ' + payee + (memo ? ' (' + memo + ')' : ''),
+                amount: -amount,
+                balance: parseFloat(state.checking),
+                type: 'debit',
+                category: 'Bill Pay'
+            };
+            
+            var history = JSON.parse(localStorage.getItem('crownledger_history') || '[]');
+            history.unshift(tx);
+            localStorage.setItem('crownledger_history', JSON.stringify(history));
+            
+            showMessage('Payment of $' + amount.toFixed(2) + ' to ' + payee + ' has been scheduled successfully.');
+            document.getElementById('paymentForm').style.display = 'none';
+            document.getElementById('billAmount').value = '';
+            document.getElementById('billMemo').value = '';
+            
+            return false;
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            var state = JSON.parse(localStorage.getItem('crownledger_state') || '{}');
+            if (state.firstName) {
+                document.getElementById('userName').textContent = state.firstName;
+            }
+        });
+    </script>
+</body>
+</html>
