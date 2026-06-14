@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checking Account - CrownLedger Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .account-hero {
+            background: var(--navy);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            color: var(--white);
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .account-hero::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 50%;
+        }
+        
+        .account-hero h1 {
+            color: var(--white);
+            font-size: 24px;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .account-hero .account-number {
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-balance {
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: -2px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+        }
+        
+        .hero-btn {
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            font-family: inherit;
+        }
+        
+        .hero-btn-primary {
+            background: var(--white);
+            color: var(--navy);
+        }
+        
+        .hero-btn-primary:hover {
+            background: var(--bg);
+        }
+        
+        .hero-btn-secondary {
+            background: rgba(255,255,255,0.15);
+            color: var(--white);
+            border: 1px solid rgba(255,255,255,0.25);
+        }
+        
+        .hero-btn-secondary:hover {
+            background: rgba(255,255,255,0.25);
+        }
+        
+        .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .transaction-table th {
+            text-align: left;
+            padding: 14px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border-light);
+        }
+        
+        .transaction-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 14px;
+        }
+        
+        .transaction-table tr:hover td {
+            background: var(--bg);
+        }
+        
+        .tx-description {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .tx-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        
+        .tx-icon.income {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+        
+        .tx-icon.expense {
+            background: var(--error-bg);
+            color: var(--error);
+        }
+        
+        .tx-name {
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        .tx-category {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        
+        .tx-amount {
+            font-weight: 700;
+            font-size: 15px;
+        }
+        
+        .tx-amount.income {
+            color: var(--success);
+        }
+        
+        .tx-amount.expense {
+            color: var(--text);
+        }
+        
+        .tx-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .tx-status.completed {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+        
+        .tx-status.pending {
+            background: var(--gold-light);
+            color: var(--gold);
+        }
+        
+        @media (max-width: 768px) {
+            .account-hero {
+                padding: 28px 24px;
+            }
+            
+            .hero-balance {
+                font-size: 32px;
+            }
+            
+            .transaction-table th:nth-child(3),
+            .transaction-table td:nth-child(3) {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .transaction-table th:nth-child(4),
+            .transaction-table td:nth-child(4) {
+                display: none;
+            }
+            
+            .hero-actions {
+                flex-direction: column;
+            }
+            
+            .hero-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <nav class="top-nav">
+            <div class="nav-left" style="display:flex;align-items:center;width:100%;max-width:1200px;margin:0 auto;padding:0 24px;">
+                <div class="logo-small">CrownLedger<span class="logo-trademark">®</span></div>
+                <div class="nav-links">
+                    <a href="dashboard.html">Accounts</a>
+                    <a href="transfer.html">Pay & Transfer</a>
+                    <a href="transactions.html">Activity</a>
+                    <a href="settings.html">Settings</a>
+                </div>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div style="margin-left:auto;display:flex;align-items:center;gap:16px;">
+                    <span class="welcome-text">Welcome, <span id="userName">Kimberly</span></span>
+                    <button class="btn-outline-small" onclick="handleLogout()">Sign Out</button>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="dashboard.html">Accounts</a>
+            <a href="transfer.html">Pay & Transfer</a>
+            <a href="transactions.html">Activity</a>
+            <a href="settings.html">Settings</a>
+            <a href="#" onclick="handleLogout()">Sign Out</a>
+        </div>
+
+        <main class="main-content">
+            <div class="account-hero">
+                <h1>CrownLedger Checking</h1>
+                <div class="account-number">Account ****4521</div>
+                <div class="hero-balance" id="checkingBalance">$11,700.00</div>
+                <div class="hero-actions">
+                    <a href="transfer.html" class="hero-btn hero-btn-primary"><i class="fas fa-exchange-alt"></i> Transfer</a>
+                    <a href="bill-pay.html" class="hero-btn hero-btn-secondary"><i class="fas fa-paper-plane"></i> Pay Bill</a>
+                    <a href="zelle.html" class="hero-btn hero-btn-secondary"><i class="fas fa-bolt"></i> Zelle</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Transaction History</h2>
+                    <div style="display:flex;gap:8px;">
+                        <button class="btn-copy" onclick="showMessage('Filter coming soon')"><i class="fas fa-filter"></i> Filter</button>
+                        <button class="btn-copy" onclick="showMessage('Export coming soon')"><i class="fas fa-download"></i> Export</button>
+                    </div>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="transaction-table">
+                        <thead>
+                            <tr>
+                                <th>Transaction</th>
+                                <th>Date</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th style="text-align:right;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionTable">
+                            <tr>
+                                <td>
+                                    <div class="tx-description">
+                                        <div class="tx-icon income"><i class="fas fa-arrow-down"></i></div>
+                                        <div>
+                                            <div class="tx-name">Liberty Mutual Insurance</div>
+                                            <div class="tx-category">Insurance Payout</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Jun 11, 2026</td>
+                                <td>Income</td>
+                                <td><span class="tx-status completed"><i class="fas fa-check"></i> Completed</span></td>
+                                <td class="tx-amount income" style="text-align:right;">+$208.00</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="tx-description">
+                                        <div class="tx-icon income"><i class="fas fa-arrow-down"></i></div>
+                                        <div>
+                                            <div class="tx-name">Liberty Mutual Insurance</div>
+                                            <div class="tx-category">Insurance Payout</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Jun 10, 2026</td>
+                                <td>Income</td>
+                                <td><span class="tx-status completed"><i class="fas fa-check"></i> Completed</span></td>
+                                <td class="tx-amount income" style="text-align:right;">+$318.00</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="tx-description">
+                                        <div class="tx-icon income"><i class="fas fa-arrow-down"></i></div>
+                                        <div>
+                                            <div class="tx-name">Liberty Mutual Insurance</div>
+                                            <div class="tx-category">Insurance Payout</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Jun 8, 2026</td>
+                                <td>Income</td>
+                                <td><span class="tx-status completed"><i class="fas fa-check"></i> Completed</span></td>
+                                <td class="tx-amount income" style="text-align:right;">+$10,402.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>© 2026 CrownLedger Bank, N.A. Member FDIC. Equal Housing Lender</p>
+                <div class="footer-links">
+                    <a href="#">Privacy</a>
+                    <a href="#">Security</a>
+                    <a href="#">Terms of Use</a>
+                    <a href="#">Accessibility</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="messageModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <p id="modalMessage"></p>
+            <button onclick="closeModal()" class="btn-primary">OK</button>
+        </div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+        }
+        
+        function showMessage(msg) {
+            document.getElementById('modalMessage').textContent = msg;
+            document.getElementById('messageModal').style.display = 'flex';
+        }
+        
+        function closeModal() {
+            document.getElementById('messageModal').style.display = 'none';
+        }
+        
+        (function() {
+            if (!isLoggedIn()) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            var session = getSession();
+            document.getElementById('userName').textContent = session.firstName || 'Kimberly';
+            document.getElementById('checkingBalance').textContent = formatCurrency(session.checking || 11700.00);
+        })();
+    </script>
+</body>
+</html>
