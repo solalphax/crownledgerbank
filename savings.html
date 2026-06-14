@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Savings Account - CrownLedger Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .account-hero {
+            background: linear-gradient(135deg, var(--gold) 0%, #a08020 100%);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            color: var(--white);
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .account-hero::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+        }
+        
+        .account-hero h1 {
+            color: var(--white);
+            font-size: 24px;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .account-hero .account-number {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-balance {
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: -2px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+        }
+        
+        .hero-btn {
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            font-family: inherit;
+        }
+        
+        .hero-btn-primary {
+            background: var(--white);
+            color: #8b6914;
+        }
+        
+        .hero-btn-primary:hover {
+            background: var(--bg);
+        }
+        
+        .hero-btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: var(--white);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .hero-btn-secondary:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .apy-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-box {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+        }
+        
+        .stat-box-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--navy);
+            margin-bottom: 4px;
+        }
+        
+        .stat-box-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .account-hero {
+                padding: 28px 24px;
+            }
+            
+            .hero-balance {
+                font-size: 32px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-actions {
+                flex-direction: column;
+            }
+            
+            .hero-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <nav class="top-nav">
+            <div class="nav-left" style="display:flex;align-items:center;width:100%;max-width:1200px;margin:0 auto;padding:0 24px;">
+                <div class="logo-small">CrownLedger<span class="logo-trademark">®</span></div>
+                <div class="nav-links">
+                    <a href="dashboard.html">Accounts</a>
+                    <a href="transfer.html">Pay & Transfer</a>
+                    <a href="transactions.html">Activity</a>
+                    <a href="settings.html">Settings</a>
+                </div>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div style="margin-left:auto;display:flex;align-items:center;gap:16px;">
+                    <span class="welcome-text">Welcome, <span id="userName">Kimberly</span></span>
+                    <button class="btn-outline-small" onclick="handleLogout()">Sign Out</button>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="dashboard.html">Accounts</a>
+            <a href="transfer.html">Pay & Transfer</a>
+            <a href="transactions.html">Activity</a>
+            <a href="settings.html">Settings</a>
+            <a href="#" onclick="handleLogout()">Sign Out</a>
+        </div>
+
+        <main class="main-content">
+            <div class="account-hero">
+                <div class="apy-badge">
+                    <i class="fas fa-percentage"></i>
+                    4.25% APY
+                </div>
+                <h1>CrownLedger Savings</h1>
+                <div class="account-number">Account ****8834</div>
+                <div class="hero-balance" id="savingsBalance">$2,520.00</div>
+                <div class="hero-actions">
+                    <a href="transfer.html" class="hero-btn hero-btn-primary"><i class="fas fa-exchange-alt"></i> Transfer</a>
+                    <a href="#" class="hero-btn hero-btn-secondary" onclick="showMessage('Auto-save feature coming soon')"><i class="fas fa-magic"></i> Auto-Save</a>
+                    <a href="#" class="hero-btn hero-btn-secondary" onclick="showMessage('Goals feature coming soon')"><i class="fas fa-bullseye"></i> Goals</a>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-box-value">$107.10</div>
+                    <div class="stat-box-label">Interest YTD</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-box-value">$2,520.00</div>
+                    <div class="stat-box-label">Total Saved</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-box-value">12</div>
+                    <div class="stat-box-label">Months Active</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Interest History</h2>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="transaction-table" style="width:100%;border-collapse:collapse;">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;padding:14px 16px;font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid var(--border-light);">Date</th>
+                                <th style="text-align:left;padding:14px 16px;font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid var(--border-light);">Description</th>
+                                <th style="text-align:right;padding:14px 16px;font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid var(--border-light);">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding:16px;border-bottom:1px solid var(--border-light);font-size:14px;">Jun 1, 2026</td>
+                                <td style="padding:16px;border-bottom:1px solid var(--border-light);font-size:14px;">Monthly Interest</td>
+                                <td style="padding:16px;border-bottom:1px solid var(--border-light);font-size:14px;text-align:right;font-weight:700;color:var(--success);">+$8.92</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:16px;border-bottom:1px solid var(--border-light);font-size:14px;">May 1, 2026</td>
+                                <td style="padding:16px;border-bottom:1px solid var(--border-light);font-size:14px;">Monthly Interest</td>
+                                <td style="padding:16px;border-bottom:1px solid var(--border-light);font-size:14px;text-align:right;font-weight:700;color:var(--success);">+$8.85</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:16px;border-bottom:1px solid var(--border-light);font-size:14px;">Apr 1, 2026</td>
+                                <td style="padding:16px;border-bottom:1px solid var(--border-light);font-size:14px;">Monthly Interest</td>
+                                <td style="padding:16px;border-bottom:1px solid var(--border-light);font-size:14px;text-align:right;font-weight:700;color:var(--success);">+$8.78</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>© 2026 CrownLedger Bank, N.A. Member FDIC. Equal Housing Lender</p>
+                <div class="footer-links">
+                    <a href="#">Privacy</a>
+                    <a href="#">Security</a>
+                    <a href="#">Terms of Use</a>
+                    <a href="#">Accessibility</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="messageModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <p id="modalMessage"></p>
+            <button onclick="closeModal()" class="btn-primary">OK</button>
+        </div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+        }
+        
+        function showMessage(msg) {
+            document.getElementById('modalMessage').textContent = msg;
+            document.getElementById('messageModal').style.display = 'flex';
+        }
+        
+        function closeModal() {
+            document.getElementById('messageModal').style.display = 'none';
+        }
+        
+        (function() {
+            if (!isLoggedIn()) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            var session = getSession();
+            document.getElementById('userName').textContent = session.firstName || 'Kimberly';
+            document.getElementById('savingsBalance').textContent = formatCurrency(session.savings || 2520.00);
+        })();
+    </script>
+</body>
+</html>
