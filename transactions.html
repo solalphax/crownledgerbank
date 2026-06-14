@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity - CrownLedger Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .activity-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .activity-filters {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            background: var(--white);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+            color: var(--text-secondary);
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            border-color: var(--blue);
+            background: var(--blue-light);
+            color: var(--blue);
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-family: inherit;
+            background: var(--white);
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+        
+        .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .transaction-table th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 2px solid var(--border-light);
+        }
+        
+        .transaction-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 14px;
+        }
+        
+        .transaction-table tr:hover td {
+            background: var(--blue-light);
+        }
+        
+        .tx-description {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .tx-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .tx-icon.credit { background: var(--success-bg); color: var(--success); }
+        .tx-icon.debit { background: var(--error-bg); color: var(--error); }
+        .tx-icon.transfer { background: var(--blue-light); color: var(--blue); }
+        
+        .tx-name {
+            font-weight: 600;
+        }
+        
+        .tx-category {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        
+        .tx-amount {
+            font-weight: 700;
+            font-size: 15px;
+        }
+        
+        .tx-amount.credit { color: var(--success); }
+        .tx-amount.debit { color: var(--error); }
+        
+        .tx-balance {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: var(--border);
+        }
+        
+        @media (max-width: 640px) {
+            .transaction-table th:nth-child(4),
+            .transaction-table td:nth-child(4) {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <nav class="top-nav">
+            <div class="nav-left" style="display:flex;align-items:center;width:100%;max-width:1200px;margin:0 auto;padding:0 24px;">
+                <div class="logo-small">CrownLedger<span class="logo-trademark">®</span></div>
+                <div class="nav-links">
+                    <a href="dashboard.html">Accounts</a>
+                    <a href="transfer.html">Pay & Transfer</a>
+                    <a href="transactions.html" class="active">Activity</a>
+                    <a href="settings.html">Settings</a>
+                </div>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div style="margin-left:auto;display:flex;align-items:center;gap:16px;">
+                    <span class="welcome-text">Welcome, <span id="userName">Kimberly</span></span>
+                    <button class="btn-outline-small" onclick="handleLogout()">Sign Out</button>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="dashboard.html">Accounts</a>
+            <a href="transfer.html">Pay & Transfer</a>
+            <a href="transactions.html">Activity</a>
+            <a href="settings.html">Settings</a>
+            <a href="#" onclick="handleLogout()">Sign Out</a>
+        </div>
+
+        <main class="main-content">
+            <div class="page-header" style="text-align:center;">
+                <h1>Activity</h1>
+                <p class="subtitle">View and search your transaction history</p>
+            </div>
+
+            <div class="activity-container">
+                <div class="activity-filters">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchTx" placeholder="Search transactions..." onkeyup="filterTransactions()">
+                    </div>
+                    <button class="filter-btn active" onclick="setFilter(this, 'all')">All</button>
+                    <button class="filter-btn" onclick="setFilter(this, 'credit')">Deposits</button>
+                    <button class="filter-btn" onclick="setFilter(this, 'debit')">Withdrawals</button>
+                    <button class="filter-btn" onclick="setFilter(this, 'transfer')">Transfers</button>
+                </div>
+
+                <div class="card" style="padding:0;overflow:hidden;">
+                    <table class="transaction-table">
+                        <thead>
+                            <tr>
+                                <th>Transaction</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionBody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                    <div class="empty-state" id="emptyState" style="display:none;">
+                        <i class="fas fa-receipt"></i>
+                        <h3>No transactions found</h3>
+                        <p>Try adjusting your search or filters</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>© 2026 CrownLedger Bank, N.A. Member FDIC. Equal Housing Lender</p>
+                <div class="footer-links">
+                    <a href="#">Privacy</a>
+                    <a href="#">Security</a>
+                    <a href="#">Terms of Use</a>
+                    <a href="#">Accessibility</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="messageModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <p id="modalMessage"></p>
+            <button onclick="closeModal()" class="btn-primary">OK</button>
+        </div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        var currentFilter = 'all';
+        var allTransactions = [];
+        
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+        }
+        
+        function showMessage(msg) {
+            document.getElementById('modalMessage').textContent = msg;
+            document.getElementById('messageModal').style.display = 'flex';
+        }
+        
+        function closeModal() {
+            document.getElementById('messageModal').style.display = 'none';
+        }
+        
+        function setFilter(btn, filter) {
+            document.querySelectorAll('.filter-btn').forEach(function(el) {
+                el.classList.remove('active');
+            });
+            btn.classList.add('active');
+            currentFilter = filter;
+            renderTransactions();
+        }
+        
+        function filterTransactions() {
+            renderTransactions();
+        }
+        
+        function getTxIcon(category) {
+            var icons = {
+                'Deposit': 'fa-arrow-down',
+                'Bill Pay': 'fa-file-invoice',
+                'Transfer': 'fa-exchange-alt',
+                'Send Money': 'fa-paper-plane',
+                'Withdrawal': 'fa-arrow-up',
+                'Bonus': 'fa-gift',
+                'Insurance': 'fa-shield-alt'
+            };
+            return icons[category] || 'fa-circle';
+        }
+        
+        function renderTransactions() {
+            var search = document.getElementById('searchTx').value.toLowerCase();
+            var tbody = document.getElementById('transactionBody');
+            var emptyState = document.getElementById('emptyState');
+            tbody.innerHTML = '';
+            
+            var filtered = allTransactions.filter(function(tx) {
+                var matchesFilter = currentFilter === 'all' || tx.type === currentFilter;
+                var matchesSearch = !search || 
+                    tx.description.toLowerCase().includes(search) || 
+                    tx.category.toLowerCase().includes(search);
+                return matchesFilter && matchesSearch;
+            });
+            
+            if (filtered.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            emptyState.style.display = 'none';
+            
+            filtered.forEach(function(tx) {
+                var row = document.createElement('tr');
+                var iconClass = tx.type === 'credit' ? 'credit' : (tx.type === 'transfer' ? 'transfer' : 'debit');
+                var amountPrefix = tx.type === 'credit' ? '+' : '';
+                var amountClass = tx.type === 'credit' ? 'credit' : 'debit';
+                
+                row.innerHTML = 
+                    '<td>' +
+                        '<div class="tx-description">' +
+                            '<div class="tx-icon ' + iconClass + '"><i class="fas ' + getTxIcon(tx.category) + '"></i></div>' +
+                            '<div>' +
+                                '<div class="tx-name">' + tx.description + '</div>' +
+                                '<div class="tx-category">' + tx.category + '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</td>' +
+                    '<td>' + tx.date + '</td>' +
+                    '<td class="tx-amount ' + amountClass + '">' + amountPrefix + '$' + Math.abs(tx.amount).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>' +
+                    '<td class="tx-balance">$' + tx.balance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</td>';
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        function initTransactions() {
+            var stored = localStorage.getItem('crownledger_history');
+            if (stored) {
+                allTransactions = JSON.parse(stored);
+            } else {
+                // Default transactions
+                allTransactions = [
+                    { id: '1', date: 'Jun 11, 2026', description: 'Liberty Mutual Insurance - Bonus', amount: 208.00, balance: 11700.00, type: 'credit', category: 'Bonus' },
+                    { id: '2', date: 'Jun 10, 2026', description: 'Liberty Mutual Insurance - Bonus', amount: 318.00, balance: 11492.00, type: 'credit', category: 'Bonus' },
+                    { id: '3', date: 'Jun 8, 2026', description: 'Liberty Mutual Insurance', amount: 10402.00, balance: 11174.00, type: 'credit', category: 'Deposit' },
+                    { id: '4', date: 'Jun 5, 2026', description: 'Transfer: Savings to Checking', amount: 500.00, balance: 772.00, type: 'transfer', category: 'Transfer' },
+                    { id: '5', date: 'Jun 1, 2026', description: 'Verizon Wireless', amount: -89.00, balance: 272.00, type: 'debit', category: 'Bill Pay' },
+                    { id: '6', date: 'May 28, 2026', description: 'Comcast Xfinity', amount: -124.00, balance: 361.00, type: 'debit', category: 'Bill Pay' },
+                    { id: '7', date: 'May 25, 2026', description: 'Direct Deposit - Payroll', amount: 3200.00, balance: 485.00, type: 'credit', category: 'Deposit' },
+                    { id: '8', date: 'May 20, 2026', description: 'ATM Withdrawal', amount: -200.00, balance: 2715.00, type: 'debit', category: 'Withdrawal' }
+                ];
+                localStorage.setItem('crownledger_history', JSON.stringify(allTransactions));
+            }
+            renderTransactions();
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            var state = JSON.parse(localStorage.getItem('crownledger_state') || '{}');
+            if (state.firstName) {
+                document.getElementById('userName').textContent = state.firstName;
+            }
+            initTransactions();
+        });
+    </script>
+</body>
+</html>
