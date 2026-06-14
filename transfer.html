@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfer & Pay - CrownLedger Bank</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --blue: #0b4f9c;
+            --blue-dark: #083d7a;
+            --blue-light: #e8f0fe;
+            --white: #ffffff;
+            --bg: #f5f7fa;
+            --text: #1a1a2e;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --border-light: #f3f4f6;
+            --radius: 12px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+            --green: #16a34a;
+            --green-light: #dcfce7;
+            --red: #dc2626;
+            --amber: #f59e0b;
+            --amber-light: #fef3c7;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+        /* Top Navigation */
+        .top-nav {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 60px;
+        }
+        .logo-small {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--blue);
+            letter-spacing: -0.5px;
+        }
+        .logo-trademark { font-size: 10px; vertical-align: super; font-weight: 400; }
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            margin-left: 48px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+            position: relative;
+        }
+        .nav-links a:hover, .nav-links a.active { color: var(--blue); }
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--blue);
+            border-radius: 2px 2px 0 0;
+        }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--blue);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--text);
+            cursor: pointer;
+        }
+        .mobile-menu {
+            display: none;
+            background: var(--white);
+            border-top: 1px solid var(--border);
+            padding: 16px 24px;
+        }
+        .mobile-menu a {
+            display: block;
+            padding: 12px 0;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 15px;
+            font-weight: 500;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .mobile-menu a:last-child { border-bottom: none; }
+
+        /* Main Content */
+        .main-content {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+        .page-header { margin-bottom: 28px; }
+        .page-header h1 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
+        .page-header p { color: var(--text-muted); font-size: 15px; }
+
+        /* Transfer Type Tabs */
+        .transfer-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            background: var(--white);
+            padding: 6px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .tab-btn.active { background: var(--blue); color: var(--white); }
+        .tab-btn:hover:not(.active) { background: var(--border-light); color: var(--text); }
+
+        /* Card Styles */
+        .card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .card-header h2 { font-size: 17px; font-weight: 700; }
+        .card-header p { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+        .card-body { padding: 24px; }
+
+        /* Account Selection */
+        .account-select { display: flex; flex-direction: column; gap: 12px; }
+        .account-option {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--white);
+        }
+        .account-option:hover { border-color: var(--blue); box-shadow: var(--shadow); }
+        .account-option.selected { border-color: var(--blue); background: var(--blue-light); }
+        .account-option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--blue);
+            cursor: pointer;
+        }
+        .account-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .account-icon.checking { background: var(--blue-light); color: var(--blue); }
+        .account-icon.savings { background: var(--green-light); color: var(--green); }
+        .account-info { flex: 1; }
+        .account-info h3 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+        .account-info p { font-size: 13px; color: var(--text-muted); }
+        .account-balance { text-align: right; }
+        .account-balance .amount { font-size: 18px; font-weight: 800; color: var(--text); }
+        .account-balance .label { font-size: 12px; color: var(--text-muted); }
+
+        /* Professional Amount Input */
+        .amount-section { margin-top: 24px; }
+        .amount-section label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+        .amount-box {
+            background: var(--white);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0;
+            transition: border-color 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .amount-box:focus-within { border-color: var(--blue); }
+        .amount-box .currency-symbol {
+            padding: 16px 0 16px 20px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-muted);
+            user-select: none;
+        }
+        .amount-box input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 16px 20px 16px 8px;
+            font-size: 24px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            outline: none;
+        }
+        .amount-box input::placeholder { color: var(--text-muted); opacity: 0.5; }
+        .amount-hint {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .amount-hint .max-btn {
+            color: var(--blue);
+            font-weight: 600;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Transfer Options Grid */
+        .transfer-options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .transfer-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 24px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            background: var(--white);
+        }
+        .transfer-option:hover { border-color: var(--blue); box-shadow: var(--shadow); transform: translateY(-2px); }
+        .transfer-option.selected { border-color: var(--blue); background: var(--blue-light); }
+        .transfer-option-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .transfer-option-icon.zelle { background: #ede9fe; color: #7c3aed; }
+        .transfer-option-icon.wire { background: #fef3c7; color: #d97706; }
+        .transfer-option-icon.ach { background: #e0f2fe; color: #0284c7; }
+        .transfer-option-icon.chime { background: #dcfce7; color: #16a34a; }
+        .transfer-option-icon.cashapp { background: #fef2f2; color: #ef4444; }
+        .transfer-option-icon.paypal { background: #eff6ff; color: #2563eb; }
+        .transfer-option-name { font-size: 14px; font-weight: 700; }
+        .transfer-option-desc { font-size: 12px; color: var(--text-muted); }
+
+        /* Recipient Input */
+        .recipient-section { margin-top: 24px; }
+        .recipient-section label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+        .recipient-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.2s;
+        }
+        .recipient-input:focus { outline: none; border-color: var(--blue); }
+
+        /* Progress Steps */
+        .progress-steps {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 32px;
+            gap: 8px;
+        }
+        .step { display: flex; align-items: center; gap: 8px; }
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--border);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+        .step-number.active { background: var(--blue); color: var(--white); }
+        .step-number.completed { background: var(--green); color: var(--white); }
+        .step-label { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+        .step-label.active { color: var(--blue); }
+        .step-label.completed { color: var(--green); }
+        .step-divider { width: 40px; height: 2px; background: var(--border); border-radius: 1px; }
+        .step-divider.completed { background: var(--green); }
+
+        /* Activation Fee Section */
+        .fee-section {
+            background: var(--amber-light);
+            border: 2px solid var(--amber);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .fee-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .fee-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--amber);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .fee-header-text h3 { font-size: 16px; font-weight: 700; color: #92400e; }
+        .fee-header-text p { font-size: 13px; color: #92400e; opacity: 0.8; }
+        .fee-details {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .fee-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+        .fee-row:not(:last-child) { border-bottom: 1px dashed var(--border); }
+        .fee-row .label { color: var(--text-muted); }
+        .fee-row .value { font-weight: 600; }
+        .fee-row.total {
+            font-size: 16px;
+            font-weight: 700;
+            padding-top: 12px;
+            margin-top: 4px;
+            border-top: 2px solid var(--border);
+        }
+        .fee-row.total .value { color: var(--blue); }
+        .fee-notice {
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 13px;
+            color: #92400e;
+            line-height: 1.5;
+        }
+        .fee-notice i { margin-right: 6px; color: var(--amber); }
+
+        /* Chime Payment Card */
+        .payment-card {
+            background: var(--white);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .payment-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .payment-card h3 i { color: var(--blue); }
+        .chime-info {
+            background: var(--blue-light);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .chime-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+        .chime-info-row:not(:last-child) { border-bottom: 1px solid #dbeafe; }
+        .chime-info-row .label { color: var(--text-muted); font-weight: 500; }
+        .chime-info-row .value {
+            font-weight: 700;
+            color: var(--text);
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+        }
+        .copy-btn {
+            background: var(--blue);
+            color: var(--white);
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .copy-btn:hover { background: var(--blue-dark); }
+        .copy-btn.copied { background: var(--green); }
+
+        /* Upload Section */
+        .upload-section { margin-top: 20px; }
+        .upload-section label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--bg);
+        }
+        .upload-zone:hover { border-color: var(--blue); background: var(--blue-light); }
+        .upload-zone.has-file { border-color: var(--green); background: var(--green-light); }
+        .upload-zone i { font-size: 32px; color: var(--text-muted); margin-bottom: 12px; }
+        .upload-zone p { font-size: 14px; color: var(--text-muted); margin-bottom: 4px; }
+        .upload-zone .file-name { font-size: 13px; font-weight: 600; color: var(--text); margin-top: 8px; }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            width: 100%;
+        }
+        .btn-primary { background: var(--blue); color: var(--white); }
+        .btn-primary:hover { background: var(--blue-dark); transform: translateY(-1px); box-shadow: var(--shadow); }
+        .btn-primary:disabled { background: var(--text-muted); cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-secondary { background: var(--white); color: var(--text); border: 2px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--blue); color: var(--blue); }
+        .btn-group { display: flex; gap: 12px; margin-top: 24px; }
+        .btn-group .btn { width: auto; flex: 1; }
+
+        /* Success/Receipt */
+        .receipt-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            text-align: center;
+        }
+        .receipt-header {
+            background: var(--green);
+            color: var(--white);
+            padding: 32px 24px;
+        }
+        .receipt-header i { font-size: 48px; margin-bottom: 12px; }
+        .receipt-header h2 { font-size: 22px; font-weight: 800; }
+        .receipt-header p { font-size: 14px; opacity: 0.9; margin-top: 4px; }
+        .receipt-body { padding: 32px 24px; }
+        .receipt-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 14px;
+        }
+        .receipt-detail .label { color: var(--text-muted); }
+        .receipt-detail .value { font-weight: 600; }
+        .receipt-detail.total {
+            font-size: 16px;
+            font-weight: 700;
+            border-top: 2px solid var(--border);
+            border-bottom: none;
+            margin-top: 8px;
+            padding-top: 16px;
+        }
+        .receipt-detail.total .value { color: var(--green); }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--text);
+            color: var(--white);
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        /* Hide/Show */
+        .hidden { display: none; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+        .step-content { display: none; }
+        .step-content.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            .transfer-options-grid { grid-template-columns: 1fr; }
+            .btn-group { flex-direction: column; }
+            .btn-group .btn { width: 100%; }
+            .transfer-tabs { flex-direction: column; }
+            .account-option { flex-wrap: wrap; }
+            .account-balance { width: 100%; text-align: left; margin-top: 8px; padding-left: 36px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-inner">
+            <div style="display:flex;align-items:center;">
+                <div class="logo-small">CrownLedger<span class="logo-trademark">®</span></div>
+                <div class="nav-links">
+                    <a href="dashboard.html">Accounts</a>
+                    <a href="transfer.html" class="active">Pay & Transfer</a>
+                    <a href="transactions.html">Activity</a>
+                    <a href="settings.html">Settings</a>
+                </div>
+            </div>
+            <div class="nav-right">
+                <div class="user-badge">
+                    <div class="user-avatar">KW</div>
+                    <span>Kimberly Westbrook</span>
+                </div>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="dashboard.html">Accounts</a>
+            <a href="transfer.html">Pay & Transfer</a>
+            <a href="transactions.html">Activity</a>
+            <a href="settings.html">Settings</a>
+            <a href="#" onclick="logout()">Sign Out</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Pay & Transfer</h1>
+            <p>Send money to your accounts, friends, family, or external destinations.</p>
+        </div>
+
+        <!-- Transfer Type Tabs -->
+        <div class="transfer-tabs">
+            <button class="tab-btn active" onclick="switchTab('internal')" id="tabInternal">
+                <i class="fas fa-arrow-right-arrow-left"></i> Between Accounts
+            </button>
+            <button class="tab-btn" onclick="switchTab('external')" id="tabExternal">
+                <i class="fas fa-paper-plane"></i> Send to Someone
+            </button>
+        </div>
+
+        <!-- INTERNAL TRANSFER -->
+        <div class="tab-content active" id="tabContentInternal">
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-wallet" style="color:var(--blue);margin-right:8px;"></i>Transfer Between Your Accounts</h2>
+                    <p>Move money instantly between your CrownLedger accounts at no charge</p>
+                </div>
+                <div class="card-body">
+                    <div class="account-select">
+                        <label style="font-size:14px;font-weight:600;margin-bottom:12px;display:block;">From</label>
+                        <label class="account-option" onclick="selectFromAccount('checking', 11700)">
+                            <input type="radio" name="fromAccount" value="checking" id="fromChecking">
+                            <div class="account-icon checking"><i class="fas fa-money-check"></i></div>
+                            <div class="account-info">
+                                <h3>Platinum Checking</h3>
+                                <p>•••• 4521</p>
+                            </div>
+                            <div class="account-balance">
+                                <div class="amount" id="fromCheckingBal">$11,700.00</div>
+                                <div class="label">Available</div>
+                            </div>
+                        </label>
+
+                        <label class="account-option" onclick="selectFromAccount('savings', 2520)">
+                            <input type="radio" name="fromAccount" value="savings" id="fromSavings">
+                            <div class="account-icon savings"><i class="fas fa-piggy-bank"></i></div>
+                            <div class="account-info">
+                                <h3>High-Yield Savings</h3>
+                                <p>•••• 8893</p>
+                            </div>
+                            <div class="account-balance">
+                                <div class="amount" id="fromSavingsBal">$2,520.00</div>
+                                <div class="label">Available</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="to-account-section" style="margin-top:24px;">
+                        <label style="font-size:14px;font-weight:600;margin-bottom:12px;display:block;">To</label>
+                        <div class="account-select">
+                            <label class="account-option" onclick="selectToAccount('checking')">
+                                <input type="radio" name="toAccount" value="checking" id="toChecking">
+                                <div class="account-icon checking"><i class="fas fa-money-check"></i></div>
+                                <div class="account-info">
+                                    <h3>Platinum Checking</h3>
+                                    <p>•••• 4521</p>
+                                </div>
+                            </label>
+
+                            <label class="account-option" onclick="selectToAccount('savings')">
+                                <input type="radio" name="toAccount" value="savings" id="toSavings">
+                                <div class="account-icon savings"><i class="fas fa-piggy-bank"></i></div>
+                                <div class="account-info">
+                                    <h3>High-Yield Savings</h3>
+                                    <p>•••• 8893</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="amount-section">
+                        <label>Amount</label>
+                        <div class="amount-box">
+                            <span class="currency-symbol">$</span>
+                            <input type="number" id="internalAmount" placeholder="0.00" step="0.01" min="0.01">
+                        </div>
+                        <div class="amount-hint">
+                            <span id="internalAvailText">Select an account to see available balance</span>
+                            <button class="max-btn" id="internalMaxBtn" onclick="setInternalMax()" style="display:none;">Max</button>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" id="btnInternalTransfer" onclick="processInternalTransfer()" disabled style="margin-top:24px;">
+                        Transfer Now <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXTERNAL TRANSFER -->
+        <div class="tab-content" id="tabContentExternal">
+
+            <!-- Progress Steps -->
+            <div class="progress-steps">
+                <div class="step">
+                    <div class="step-number active" id="extStep1num">1</div>
+                    <span class="step-label active" id="extStep1label">Details</span>
+                </div>
+                <div class="step-divider" id="extDiv1"></div>
+                <div class="step">
+                    <div class="step-number" id="extStep2num">2</div>
+                    <span class="step-label" id="extStep2label">Activation</span>
+                </div>
+                <div class="step-divider" id="extDiv2"></div>
+                <div class="step">
+                    <div class="step-number" id="extStep3num">3</div>
+                    <span class="step-label" id="extStep3label">Confirm</span>
+                </div>
+            </div>
+
+            <!-- STEP 1: Account, Amount, Transfer Option, Recipient -->
+            <div class="step-content active" id="extStep1">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-wallet" style="color:var(--blue);margin-right:8px;"></i>From Account</h2>
+                        <p>Select which account to send money from</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="account-select">
+                            <label class="account-option" onclick="selectExtAccount('checking', 11700)">
+                                <input type="radio" name="extAccount" value="checking" id="extChecking">
+                                <div class="account-icon checking"><i class="fas fa-money-check"></i></div>
+                                <div class="account-info">
+                                    <h3>Platinum Checking</h3>
+                                    <p>•••• 4521</p>
+                                </div>
+                                <div class="account-balance">
+                                    <div class="amount" id="extCheckingBal">$11,700.00</div>
+                                    <div class="label">Available</div>
+                                </div>
+                            </label>
+
+                            <label class="account-option" onclick="selectExtAccount('savings', 2520)">
+                                <input type="radio" name="extAccount" value="savings" id="extSavings">
+                                <div class="account-icon savings"><i class="fas fa-piggy-bank"></i></div>
+                                <div class="account-info">
+                                    <h3>High-Yield Savings</h3>
+                                    <p>•••• 8893</p>
+                                </div>
+                                <div class="account-balance">
+                                    <div class="amount" id="extSavingsBal">$2,520.00</div>
+                                    <div class="label">Available</div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="amount-section">
+                            <label>Amount to Send</label>
+                            <div class="amount-box">
+                                <span class="currency-symbol">$</span>
+                                <input type="number" id="extAmount" placeholder="0.00" step="0.01" min="0.01">
+                            </div>
+                            <div class="amount-hint">
+                                <span id="extAvailText">Select an account to see available balance</span>
+                                <button class="max-btn" id="extMaxBtn" onclick="setExtMax()" style="display:none;">Max</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-exchange-alt" style="color:var(--blue);margin-right:8px;"></i>Transfer Method</h2>
+                        <p>Choose how you want to send the money</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="transfer-options-grid">
+                            <div class="transfer-option" onclick="selectTransferOption('zelle')" id="optZelle">
+                                <div class="transfer-option-icon zelle"><i class="fas fa-bolt"></i></div>
+                                <div class="transfer-option-name">Zelle®</div>
+                                <div class="transfer-option-desc">Minutes to enrolled users</div>
+                            </div>
+                            <div class="transfer-option" onclick="selectTransferOption('wire')" id="optWire">
+                                <div class="transfer-option-icon wire"><i class="fas fa-globe"></i></div>
+                                <div class="transfer-option-name">Wire Transfer</div>
+                                <div class="transfer-option-desc">Same business day</div>
+                            </div>
+                            <div class="transfer-option" onclick="selectTransferOption('ach')" id="optAch">
+                                <div class="transfer-option-icon ach"><i class="fas fa-university"></i></div>
+                                <div class="transfer-option-name">ACH Transfer</div>
+                                <div class="transfer-option-desc">1-3 business days</div>
+                            </div>
+                            <div class="transfer-option" onclick="selectTransferOption('chime')" id="optChime">
+                                <div class="transfer-option-icon chime"><i class="fas fa-credit-card"></i></div>
+                                <div class="transfer-option-name">Chime</div>
+                                <div class="transfer-option-desc">Instant to Chime users</div>
+                            </div>
+                            <div class="transfer-option" onclick="selectTransferOption('cashapp')" id="optCashapp">
+                                <div class="transfer-option-icon cashapp"><i class="fas fa-money-bill-wave"></i></div>
+                                <div class="transfer-option-name">Cash App</div>
+                                <div class="transfer-option-desc">Minutes to $Cashtag</div>
+                            </div>
+                            <div class="transfer-option" onclick="selectTransferOption('paypal')" id="optPaypal">
+                                <div class="transfer-option-icon paypal"><i class="fab fa-paypal"></i></div>
+                                <div class="transfer-option-name">PayPal</div>
+                                <div class="transfer-option-desc">Standard transfer</div>
+                            </div>
+                        </div>
+
+                        <div class="recipient-section" id="recipientSection" style="display:none;">
+                            <label id="recipientLabel">Recipient Details</label>
+                            <input type="text" class="recipient-input" id="recipientInput" placeholder="Enter recipient information...">
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" id="btnExtStep1" onclick="goToExtStep2()" disabled>
+                    Continue to Activation <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- STEP 2: Activation Fee -->
+            <div class="step-content" id="extStep2">
+                <div class="fee-section">
+                    <div class="fee-header">
+                        <div class="fee-icon"><i class="fas fa-shield-halved"></i></div>
+                        <div class="fee-header-text">
+                            <h3>Account Activation Required</h3>
+                            <p>To complete this external transfer, a one-time activation fee is required.</p>
+                        </div>
+                    </div>
+
+                    <div class="fee-details">
+                        <div class="fee-row">
+                            <span class="label">Transfer Amount</span>
+                            <span class="value" id="feeTransferAmount">$0.00</span>
+                        </div>
+                        <div class="fee-row">
+                            <span class="label">Account Activation Fee</span>
+                            <span class="value" style="color:var(--red);">$500.00</span>
+                        </div>
+                        <div class="fee-row total">
+                            <span class="label">Total Required</span>
+                            <span class="value" id="feeExtTotal">$0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="fee-notice">
+                        <i class="fas fa-circle-info"></i>
+                        <strong>Why is this required?</strong> CrownLedger uses this fee to verify and activate external transfer channels for first-time or high-value transfers. This is a one-time charge per account and will not apply to future transfers from the same account.
+                    </div>
+                </div>
+
+                <div class="payment-card">
+                    <h3><i class="fas fa-credit-card"></i> Pay Activation Fee via Chime</h3>
+                    <p style="font-size:14px;color:var(--text-muted);margin-bottom:16px;">Send the $500.00 activation fee to the following Chime account to proceed with your transfer:</p>
+
+                    <div class="chime-info">
+                        <div class="chime-info-row">
+                            <span class="label">Payment Method</span>
+                            <span class="value" style="font-family:Inter,sans-serif;"><i class="fas fa-credit-card" style="color:#0284c7;margin-right:6px;"></i>Chime</span>
+                        </div>
+                        <div class="chime-info-row">
+                            <span class="label">Recipient Name</span>
+                            <span class="value">Melissa Mitchell</span>
+                        </div>
+                        <div class="chime-info-row">
+                            <span class="label">Chime Tag</span>
+                            <span class="value" id="chimeTag">$MelissaM84</span>
+                            <button class="copy-btn" onclick="copyChime()">Copy</button>
+                        </div>
+                        <div class="chime-info-row">
+                            <span class="label">Amount to Send</span>
+                            <span class="value" style="color:var(--red);">$500.00</span>
+                        </div>
+                    </div>
+
+                    <div class="upload-section">
+                        <label><i class="fas fa-paperclip" style="margin-right:6px;"></i>Upload Payment Proof</label>
+                        <label for="proofFile" class="upload-zone" id="uploadZone">
+                            <i class="fas fa-cloud-arrow-up"></i>
+                            <p>Click to upload screenshot or receipt</p>
+                            <p style="font-size:12px;">JPEG, PNG, or PDF up to 10MB</p>
+                            <div class="file-name" id="fileName"></div>
+                        </label>
+                        <input type="file" id="proofFile" style="position:absolute;left:-9999px;opacity:0;" accept="image/*,.pdf" onchange="handleFile(this)">
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="goToExtStep1()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-primary" id="btnExtStep2" onclick="goToExtStep3()" disabled>
+                        I Have Paid $500.00 <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 3: Confirmation -->
+            <div class="step-content" id="extStep3">
+                <div class="receipt-card">
+                    <div class="receipt-header">
+                        <i class="fas fa-circle-check"></i>
+                        <h2>Transfer Submitted</h2>
+                        <p>Your request is being processed</p>
+                    </div>
+                    <div class="receipt-body">
+                        <div class="receipt-detail">
+                            <span class="label">From Account</span>
+                            <span class="value" id="rcptFromAccount">—</span>
+                        </div>
+                        <div class="receipt-detail">
+                            <span class="label">Transfer Method</span>
+                            <span class="value" id="rcptMethod">—</span>
+                        </div>
+                        <div class="receipt-detail">
+                            <span class="label">To</span>
+                            <span class="value" id="rcptTo">—</span>
+                        </div>
+                        <div class="receipt-detail">
+                            <span class="label">Transfer Amount</span>
+                            <span class="value" id="rcptExtAmount">—</span>
+                        </div>
+                        <div class="receipt-detail">
+                            <span class="label">Activation Fee</span>
+                            <span class="value" style="color:var(--red);">$500.00</span>
+                        </div>
+                        <div class="receipt-detail">
+                            <span class="label">Transaction ID</span>
+                            <span class="value" id="rcptExtTxId">—</span>
+                        </div>
+                        <div class="receipt-detail">
+                            <span class="label">Date & Time</span>
+                            <span class="value" id="rcptExtDate">—</span>
+                        </div>
+                        <div class="receipt-detail total">
+                            <span class="label">Net Amount to Recipient</span>
+                            <span class="value" id="rcptExtNet">—</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background:var(--blue-light);border-radius:var(--radius);padding:20px;margin-top:24px;">
+                    <p style="font-size:14px;color:var(--blue-dark);line-height:1.6;">
+                        <i class="fas fa-clock" style="margin-right:8px;"></i>
+                        <strong>Processing Time:</strong> Your transfer will be processed within 24-48 hours after activation fee verification. You will receive an email confirmation at <strong>k.westbrook@email.com</strong> once completed.
+                    </p>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="goToDashboard()">
+                        <i class="fas fa-home"></i> Dashboard
+                    </button>
+                    <button class="btn btn-primary" onclick="window.print()">
+                        <i class="fas fa-print"></i> Print Receipt
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Internal Transfer Success -->
+        <div class="tab-content hidden" id="internalSuccess">
+            <div class="receipt-card">
+                <div class="receipt-header">
+                    <i class="fas fa-circle-check"></i>
+                    <h2>Transfer Complete</h2>
+                    <p>Money moved instantly between your accounts</p>
+                </div>
+                <div class="receipt-body">
+                    <div class="receipt-detail">
+                        <span class="label">From</span>
+                        <span class="value" id="intRcptFrom">—</span>
+                    </div>
+                    <div class="receipt-detail">
+                        <span class="label">To</span>
+                        <span class="value" id="intRcptTo">—</span>
+                    </div>
+                    <div class="receipt-detail">
+                        <span class="label">Amount</span>
+                        <span class="value" id="intRcptAmount">—</span>
+                    </div>
+                    <div class="receipt-detail">
+                        <span class="label">Transaction ID</span>
+                        <span class="value" id="intRcptTxId">—</span>
+                    </div>
+                    <div class="receipt-detail">
+                        <span class="label">Date & Time</span>
+                        <span class="value" id="intRcptDate">—</span>
+                    </div>
+                    <div class="receipt-detail total">
+                        <span class="label">New Balance</span>
+                        <span class="value" id="intRcptNewBal">—</span>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="resetInternal()">
+                    <i class="fas fa-arrow-left"></i> Another Transfer
+                </button>
+                <button class="btn btn-primary" onclick="goToDashboard()">
+                    <i class="fas fa-home"></i> Dashboard
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">Copied to clipboard</div>
+
+    <script>
+        // ==================== AUTH & UTILS ====================
+        function checkAuth() {
+            var session = localStorage.getItem('crownledger_session');
+            if (!session) { window.location.href = 'index.html'; return false; }
+            return true;
+        }
+        function toggleMobileMenu() {
+            var menu = document.getElementById('mobileMenu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+        function logout() {
+            localStorage.removeItem('crownledger_session');
+            window.location.href = 'index.html';
+        }
+        function showToast(msg) {
+            var toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(function() { toast.classList.remove('show'); }, 2500);
+        }
+        function goToDashboard() { window.location.href = 'dashboard.html'; }
+
+        // ==================== TAB SWITCHING ====================
+        function switchTab(tab) {
+            document.getElementById('tabInternal').classList.toggle('active', tab === 'internal');
+            document.getElementById('tabExternal').classList.toggle('active', tab === 'external');
+            document.getElementById('tabContentInternal').classList.toggle('active', tab === 'internal');
+            document.getElementById('tabContentExternal').classList.toggle('active', tab === 'external');
+        }
+
+        // ==================== INTERNAL TRANSFER ====================
+        var fromAccountType = '';
+        var fromAccountBalance = 0;
+        var toAccountType = '';
+
+        function selectFromAccount(type, balance) {
+            fromAccountType = type;
+            fromAccountBalance = balance;
+            var options = document.querySelectorAll('#tabContentInternal .account-select:first-child .account-option');
+            options.forEach(function(el) { el.classList.remove('selected'); });
+            event.currentTarget.classList.add('selected');
+            document.getElementById('fromChecking').checked = (type === 'checking');
+            document.getElementById('fromSavings').checked = (type === 'savings');
+            document.getElementById('internalAvailText').textContent = 'Available: $' + balance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('internalMaxBtn').style.display = 'inline';
+            validateInternal();
+        }
+
+        function selectToAccount(type) {
+            toAccountType = type;
+            var options = document.querySelectorAll('#tabContentInternal .to-account-section .account-option');
+            options.forEach(function(el) { el.classList.remove('selected'); });
+            event.currentTarget.classList.add('selected');
+            document.getElementById('toChecking').checked = (type === 'checking');
+            document.getElementById('toSavings').checked = (type === 'savings');
+            validateInternal();
+        }
+
+        function setInternalMax() {
+            if (fromAccountBalance > 0) {
+                document.getElementById('internalAmount').value = fromAccountBalance.toFixed(2);
+                validateInternal();
+            }
+        }
+
+        document.getElementById('internalAmount').addEventListener('input', validateInternal);
+
+        function validateInternal() {
+            var amount = parseFloat(document.getElementById('internalAmount').value);
+            var valid = fromAccountType && toAccountType && fromAccountType !== toAccountType && amount > 0 && amount <= fromAccountBalance;
+            document.getElementById('btnInternalTransfer').disabled = !valid;
+        }
+
+        function processInternalTransfer() {
+            var amount = parseFloat(document.getElementById('internalAmount').value);
+            var state = JSON.parse(localStorage.getItem('crownledger_state') || '{}');
+            state.checking = state.checking || 11700;
+            state.savings = state.savings || 2520;
+            if (fromAccountType === 'checking') { state.checking -= amount; state.savings += amount; }
+            else { state.savings -= amount; state.checking += amount; }
+            localStorage.setItem('crownledger_state', JSON.stringify(state));
+
+            var txId = 'CLT-' + Date.now();
+            var tx = {
+                id: txId, type: 'Internal Transfer',
+                from: fromAccountType === 'checking' ? 'Platinum Checking •••• 4521' : 'High-Yield Savings •••• 8893',
+                to: toAccountType === 'checking' ? 'Platinum Checking •••• 4521' : 'High-Yield Savings •••• 8893',
+                amount: amount,
+                date: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                status: 'Completed'
+            };
+            var txs = JSON.parse(localStorage.getItem('crownledger_transactions') || '[]');
+            txs.unshift(tx);
+            localStorage.setItem('crownledger_transactions', JSON.stringify(txs));
+
+            document.getElementById('tabContentInternal').classList.remove('active');
+            document.getElementById('tabContentInternal').classList.add('hidden');
+            document.getElementById('internalSuccess').classList.remove('hidden');
+            document.getElementById('internalSuccess').classList.add('active');
+
+            document.getElementById('intRcptFrom').textContent = tx.from;
+            document.getElementById('intRcptTo').textContent = tx.to;
+            document.getElementById('intRcptAmount').textContent = '$' + amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('intRcptTxId').textContent = txId;
+            document.getElementById('intRcptDate').textContent = tx.date;
+            document.getElementById('intRcptNewBal').textContent = '$' + (fromAccountType === 'checking' ? state.checking : state.savings).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        function resetInternal() {
+            document.getElementById('internalSuccess').classList.remove('active');
+            document.getElementById('internalSuccess').classList.add('hidden');
+            document.getElementById('tabContentInternal').classList.remove('hidden');
+            document.getElementById('tabContentInternal').classList.add('active');
+            document.getElementById('internalAmount').value = '';
+            document.querySelectorAll('#tabContentInternal .account-option').forEach(function(el) { el.classList.remove('selected'); });
+            fromAccountType = ''; toAccountType = ''; fromAccountBalance = 0;
+            validateInternal();
+        }
+
+        // ==================== EXTERNAL TRANSFER ====================
+        var extAccountType = '';
+        var extAccountBalance = 0;
+        var transferOption = '';
+        var extAmount = 0;
+        var extRecipient = '';
+        var uploadedFile = null;
+
+        function selectExtAccount(type, balance) {
+            extAccountType = type;
+            extAccountBalance = balance;
+            var options = document.querySelectorAll('#extStep1 .account-select .account-option');
+            options.forEach(function(el) { el.classList.remove('selected'); });
+            event.currentTarget.classList.add('selected');
+            document.getElementById('extChecking').checked = (type === 'checking');
+            document.getElementById('extSavings').checked = (type === 'savings');
+            document.getElementById('extAvailText').textContent = 'Available: $' + balance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('extMaxBtn').style.display = 'inline';
+            validateExtStep1();
+        }
+
+        function setExtMax() {
+            if (extAccountBalance > 0) {
+                document.getElementById('extAmount').value = extAccountBalance.toFixed(2);
+                validateExtStep1();
+            }
+        }
+
+        document.getElementById('extAmount').addEventListener('input', validateExtStep1);
+
+        function selectTransferOption(option) {
+            transferOption = option;
+            document.querySelectorAll('.transfer-option').forEach(function(el) { el.classList.remove('selected'); });
+            document.getElementById('opt' + option.charAt(0).toUpperCase() + option.slice(1)).classList.add('selected');
+
+            var section = document.getElementById('recipientSection');
+            var label = document.getElementById('recipientLabel');
+            var input = document.getElementById('recipientInput');
+
+            var configs = {
+                zelle: { label: 'Email or U.S. Mobile Number', placeholder: 'Enter recipient email or phone number' },
+                wire: { label: 'Bank Wire Details', placeholder: 'Enter bank name, account number, routing number' },
+                ach: { label: 'Bank Account & Routing Number', placeholder: 'Enter account number and routing number' },
+                chime: { label: 'Chime Tag or Email', placeholder: 'Enter $ChimeTag or email' },
+                cashapp: { label: 'Cash App $Cashtag', placeholder: 'Enter $Cashtag' },
+                paypal: { label: 'PayPal Email', placeholder: 'Enter PayPal email address' }
+            };
+            var config = configs[option];
+            if (config) {
+                section.style.display = 'block';
+                label.textContent = config.label;
+                input.placeholder = config.placeholder;
+            }
+            extRecipient = '';
+            input.value = '';
+            validateExtStep1();
+        }
+
+        document.getElementById('recipientInput').addEventListener('input', function() {
+            extRecipient = this.value;
+            validateExtStep1();
+        });
+
+        function validateExtStep1() {
+            var amount = parseFloat(document.getElementById('extAmount').value);
+            var hasRecipient = extRecipient && extRecipient.length > 0;
+            var valid = extAccountType && transferOption && amount > 0 && amount <= extAccountBalance && hasRecipient;
+            document.getElementById('btnExtStep1').disabled = !valid;
+            if (valid) extAmount = amount;
+        }
+
+        function goToExtStep2() {
+            document.getElementById('extStep1').classList.remove('active');
+            document.getElementById('extStep2').classList.add('active');
+            document.getElementById('extStep1num').classList.add('completed');
+            document.getElementById('extStep1num').innerHTML = '<i class="fas fa-check" style="font-size:12px;"></i>';
+            document.getElementById('extStep1label').classList.add('completed');
+            document.getElementById('extDiv1').classList.add('completed');
+            document.getElementById('extStep2num').classList.add('active');
+            document.getElementById('extStep2label').classList.add('active');
+            document.getElementById('feeTransferAmount').textContent = '$' + extAmount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('feeExtTotal').textContent = '$' + (extAmount + 500).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        function copyChime() {
+            var tag = document.getElementById('chimeTag').textContent;
+            var btn = event.target;
+            navigator.clipboard.writeText(tag).then(function() {
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                showToast('Chime tag copied to clipboard');
+                setTimeout(function() { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+            });
+        }
+
+        function handleFile(input) {
+            if (input.files && input.files[0]) {
+                uploadedFile = input.files[0];
+                document.getElementById('fileName').textContent = uploadedFile.name;
+                document.getElementById('uploadZone').classList.add('has-file');
+                document.getElementById('btnExtStep2').disabled = false;
+            }
+        }
+
+        function goToExtStep3() {
+            var txId = 'CLW-' + Date.now();
+            var state = JSON.parse(localStorage.getItem('crownledger_state') || '{}');
+            state.checking = state.checking || 11700;
+            state.savings = state.savings || 2520;
+            if (extAccountType === 'checking') state.checking -= extAmount;
+            else state.savings -= extAmount;
+            localStorage.setItem('crownledger_state', JSON.stringify(state));
+
+            var tx = {
+                id: txId, type: 'External Transfer',
+                account: extAccountType,
+                accountName: extAccountType === 'checking' ? 'Platinum Checking •••• 4521' : 'High-Yield Savings •••• 8893',
+                method: transferOption,
+                methodName: getTransferOptionName(transferOption),
+                recipient: extRecipient,
+                amount: extAmount,
+                fee: 500,
+                netAmount: extAmount,
+                date: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                status: 'Pending',
+                file: uploadedFile ? uploadedFile.name : null
+            };
+            var txs = JSON.parse(localStorage.getItem('crownledger_transactions') || '[]');
+            txs.unshift(tx);
+            localStorage.setItem('crownledger_transactions', JSON.stringify(txs));
+
+            document.getElementById('extStep2').classList.remove('active');
+            document.getElementById('extStep3').classList.add('active');
+            document.getElementById('extStep2num').classList.add('completed');
+            document.getElementById('extStep2num').innerHTML = '<i class="fas fa-check" style="font-size:12px;"></i>';
+            document.getElementById('extStep2label').classList.add('completed');
+            document.getElementById('extDiv2').classList.add('completed');
+            document.getElementById('extStep3num').classList.add('active');
+            document.getElementById('extStep3label').classList.add('active');
+
+            document.getElementById('rcptFromAccount').textContent = tx.accountName;
+            document.getElementById('rcptMethod').textContent = tx.methodName;
+            document.getElementById('rcptTo').textContent = extRecipient;
+            document.getElementById('rcptExtAmount').textContent = '$' + extAmount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('rcptExtTxId').textContent = txId;
+            document.getElementById('rcptExtDate').textContent = tx.date;
+            document.getElementById('rcptExtNet').textContent = '$' + extAmount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        function getTransferOptionName(option) {
+            var names = { zelle: 'Zelle®', wire: 'Wire Transfer', ach: 'ACH Transfer', chime: 'Chime', cashapp: 'Cash App', paypal: 'PayPal' };
+            return names[option] || option;
+        }
+
+        function goToExtStep1() {
+            document.getElementById('extStep2').classList.remove('active');
+            document.getElementById('extStep1').classList.add('active');
+            document.getElementById('extStep1num').classList.remove('completed');
+            document.getElementById('extStep1num').textContent = '1';
+            document.getElementById('extStep1label').classList.remove('completed');
+            document.getElementById('extDiv1').classList.remove('completed');
+            document.getElementById('extStep2num').classList.remove('active');
+            document.getElementById('extStep2label').classList.remove('active');
+        }
+
+        // ==================== INIT ====================
+        if (checkAuth()) {
+            var state = JSON.parse(localStorage.getItem('crownledger_state') || '{}');
+            if (state.checking !== undefined) {
+                document.getElementById('fromCheckingBal').textContent = '$' + state.checking.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('extCheckingBal').textContent = '$' + state.checking.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            }
+            if (state.savings !== undefined) {
+                document.getElementById('fromSavingsBal').textContent = '$' + state.savings.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('extSavingsBal').textContent = '$' + state.savings.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            }
+        }
+    </script>
+</body>
+</html>
